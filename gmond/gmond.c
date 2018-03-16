@@ -1990,6 +1990,13 @@ print_host_metric( apr_socket_t *client, Ganglia_metadata *data, Ganglia_metadat
       socket_send(client, metricxml, &len);
       for (; extra_len > 0; extra_len--) 
         {
+
+          if ( strncmp(data->message_u.f_message.Ganglia_metadata_msg_u.gfull.metric.metadata.metadata_val[extra_len-1].name, "DESC", 4) == 0
+              || strncmp(data->message_u.f_message.Ganglia_metadata_msg_u.gfull.metric.metadata.metadata_val[extra_len-1].name, "TITLE", 5) == 0 
+              || strncmp(data->message_u.f_message.Ganglia_metadata_msg_u.gfull.metric.metadata.metadata_val[extra_len-1].name, "orig_name", 9) == 0 ) {
+            continue;
+          }
+
           len = apr_snprintf(metricxml, 1024, "<EXTRA_ELEMENT NAME=\"%s\" VAL=\"%s\"/>\n", 
                  data->message_u.f_message.Ganglia_metadata_msg_u.gfull.metric.metadata.metadata_val[extra_len-1].name,
                  data->message_u.f_message.Ganglia_metadata_msg_u.gfull.metric.metadata.metadata_val[extra_len-1].data);
